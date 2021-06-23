@@ -635,3 +635,31 @@ In the future, stETH may also expand to put/call options.
 
 - Pool Contract: [`0x12edd9e2073E480cc546e1E0aD7F1c9D60c0cA1E`](https://goerli.etherscan.io/address/0x12edd9e2073E480cc546e1E0aD7F1c9D60c0cA1E)
 
+
+**Resources**
+
+#
+
+Onboarding: [https://www.notion.so/stETH-Collateral-Onboarding-Risk-Evaluation-1ea3a6fb4dbf4132b2c5347dbba0c9ec](https://www.notion.so/stETH-Collateral-Onboarding-Risk-Evaluation-1ea3a6fb4dbf4132b2c5347dbba0c9ec)
+
+Lido White Paper: [https://lido.fi/static/Lido:Ethereum-Liquid-Staking.pdf](https://lido.fi/static/Lido:Ethereum-Liquid-Staking.pdf)
+
+Lido Website: [https://lido.fi](https://lido.fi/)
+
+Lido Blog: [http://blog.lido.fi](http://blog.lido.fi) 
+
+CoinMarketCap: [https://coinmarketcap.com/currencies/steth/historical-data/](https://coinmarketcap.com/currencies/steth/historical-data/)
+
+CoinGecko: [https://www.coingecko.com/en/coins/lido-staked-ether/historical_data/eth](https://www.coingecko.com/en/coins/lido-staked-ether/historical_data/eth)
+
+Ether Scan Lido Contract: [https://etherscan.io/token/0xae7ab96520de3a18e5e111b5eaab095312d7fe84](https://www.notion.so/20de3a18e5e111b5eaab095312d7fe84)
+
+Dune Analytics: [https://duneanalytics.com/k06a/lido-finance](https://duneanalytics.com/k06a/lido-finance)
+
+Nansen: [https://pro.nansen.ai/lido](https://pro.nansen.ai/lido)
+
+Concerning stETH liquidity: [https://blog.lido.fi/concerning-steth-liquidity/](https://blog.lido.fi/concerning-steth-liquidity/)
+
+Risks Calculation: [https://drive.google.com/file/d/1n6pdXKMxaRjxQfZi9WBJXnbD96SNYdxH/view](https://drive.google.com/file/d/1n6pdXKMxaRjxQfZi9WBJXnbD96SNYdxH/view)
+
+Volatility Calculations: [https://colab.research.google.com/drive/1qEsWlsAPKqZgJUhazISPB6Ytcd1MeFGV?usp=sharing](https://colab.research.google.com/drive/1qEsWlsAPKqZgJUhazISPB6Ytcd1MeFGV?usp=sharing)

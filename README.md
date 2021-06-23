@@ -60,7 +60,7 @@ A dashboard to view these validators (and their time in queue alongside their es
 
 # Rebases & beacon chain Oracle
 
-# Lido
+## Lido
 
 - [Source code](https://github.com/lidofinance/lido-dao/blob/master/contracts/0.4.24/Lido.sol)
 - [Deployed contract](https://etherscan.io/address/0xae7ab96520de3a18e5e111b5eaab095312d7fe84)
@@ -170,7 +170,7 @@ the following. It compares the `preTotalPooledEther` and `postTotalPooledEther` 
   below, reverts the transaction with `ALLOWED_BEACON_BALANCE_DECREASE` code.
 
 
-# StableSwapStateOracle
+## StableSwapStateOracle
 
 - [Source Code](https://github.com/lidofinance/curve-merkle-oracle/blob/main/contracts/StableSwapStateOracle.sol)
 - [Deployed Contract](https://etherscan.io/address/0x3a6bd15abf19581e411621d669b6a2bbe741ffd6)
@@ -183,7 +183,7 @@ and persists the verified state along with its timestamp.
 The oracle assumes that the pool's `fee` and `A` (amplification coefficient) values don't
 change between the time of proof generation and submission.
 
-# StEthPriceFeed
+## StEthPriceFeed
 
 - [Source Code](https://github.com/lidofinance/steth-price-feed/blob/main/contracts/StEthPriceFeed.vy)
 - [Deployed Contract](https://etherscan.io/address/0xab55bf4dfbf469ebfe082b7872557d1f87692fe6)
@@ -260,7 +260,7 @@ method, staking it and wrapping the received stETH.
 
 - To reflect Beacon chain rewards and/or penalties, balances of all stETH holders are adjusted daily according to the Beacon validators state reported by a quorum of Lido Oracles. In contrast, wstETH token balances remain unchanged: instead, the amount of stETH corresponding to one wstETH changes. Anyone can convert stETH to wstETH and vice versa on-chain through [`wstETH.wrap`](https://docs.lido.fi/contracts/wsteth#wrap) and [`wstETH.unwrap`](https://docs.lido.fi/contracts/wsteth#unwrap) functions.
 
-### Administrative Addresses
+## Administrative Addresses
 
 No administrative access is built into wstETH.
 
@@ -270,7 +270,7 @@ Note that stETH contract has admin functions that could affect wstETH market val
 - The Lido protocol can be stopped by a DAO vote performed among LDO holders. This won't affect wstETH contract in any way except wrapping stETH to wstETH and unwrapping wstETH to stETH won't be possible. Voting app is: https://etherscan.io/address/0x2e59a20f205bb85a89c53f1936454680651e618e. 
 - stETH balances are adjusted upon Lido Oracle reports. This operation doesn't affect wstETH balances in any way. Oracle contract is: https://etherscan.io/address/0x442af784A788A5bd6F42A01Ebe9F287a871243fb
 
-### Inheritance Structure
+## Inheritance Structure
 
 The token contract inherits from the OpenZeppelin's `ERC20Permit`.
 
@@ -279,7 +279,7 @@ The token contract inherits from the OpenZeppelin's `ERC20Permit`.
 wstETH implements [EIP-2612 Permit](https://eips.ethereum.org/EIPS/eip-2612) standard for `secp256k1`-signed approvals.
 
 
-#### Contracts Description Table
+## Contracts Description Table
 
 
 |  Contract  |         Type        |       Bases      |                  |                 |
@@ -296,7 +296,9 @@ wstETH implements [EIP-2612 Permit](https://eips.ethereum.org/EIPS/eip-2612) sta
 | └ | stEthPerToken | External ❗️ |   |NO❗️ |
 | └ | tokensPerStEth | External ❗️ |   |NO❗️ |
 
-#### Legend
+
+## Legend
+
 
 |  Symbol  |  Meaning  |
 |:--------:|-----------|
@@ -372,7 +374,7 @@ Insurance is another derivative. Although stETH may not have a use case for insu
  
 In the future, stETH may also expand to put/call options.
 
-# Brief FAQ:
+## Brief FAQ:
 
 
 **1.** What purpose does wstETH serve? I assume mostly as a replacement for the stETH token in LPs that don't work correctly with elastic supply tokens, which is essentially stETH. Are there other reasons for wrapping stETH in wstETH?

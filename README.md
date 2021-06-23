@@ -1374,10 +1374,7 @@ In the future, stETH may also expand to put/call options.
 
 
 
-    3. Corner cases (gotchas)
-        1. Reporting slashings
-        2. Reporting few weeks of no finality on eth2
-        3.  Note on the case where the whole balance can't be transferred and 1 wei stays on the sender's account
+
 2. Oracle reporting details
     1. Quorum for the beacon chain Oracle
     2. Sanity checks for reports

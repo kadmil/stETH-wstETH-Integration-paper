@@ -329,6 +329,7 @@ There are ongoing liquidity mining programs that are occurring with stETH and LD
 - [SushiSwaps LDO-ETH Onsen pool](https://app.sushiswap.fi/pair/0xc558f600b34a5f69dd2f0d06cb8a88d829b7420a) allows liquidity providers to simultaneously accrue trading fees, liquidity mining rewards (SUSHI), as well as Lido’s Eth2 reward rate.
  
 ## Lending
+
 Lending protocols can adopt stETH to allow users to borrow assets while simultaneously accruing Eth2 rewards while still being staked as collateral.
  
 To do so, stETH must first be wrapped to be applicable as collateral. This opens up an extra layer of efficiency and composability when it comes to the DeFi ecosystem in relation to yield farming and borrowing. Some examples of lending protocols that may adopt stETH are: Aave, Maker, Compound, Cream, Alpha).
@@ -338,8 +339,6 @@ The addition of stETH as collateral in lending protocols allows for advanced com
 Price fluctuations of the underlying collateral asset still play a large role in determining a user's health ratio and liquidation risk. Although, this theoretically allows users - who stake stETH as collateral while borrowing a position - to constantly improve their health ratio whilst constantly diminishing the possibilities of any unwanted liquidations.
  
 Lending protocols may also allow for the borrowing of stETH in the form of a loan. This would allow users to take out a loan that is, in essence, constantly paying off itself. If there are many people that would like to borrow stETH, suppliers can also earn yield on their stETH as well, earning the Eth2 rate simultaneously with the variable lending rate.
- 
-With the recent advent and hysteria of undercollateralized loans (credit delegation or protocol-to-protocol), lending protocols may support stETH loans to other protocols (specifically yield aggregators) without needing to supply collateral beforehand. This is particularly efficient with the use of stETH, as the rebasing factor of stETH helps the borrower pay off their debt easier simply by holding it.
  
 Proposals have been shared on the governance forums of certain lending protocols. Users have discussed the possibilities of adding stETH as collateral. You can read more information about it here:
 
@@ -366,8 +365,6 @@ With the addition of lending protocols adopting stETH as collateral, new strateg
  
 ## Derivatives
 
-The derivatives sector is extremely vast and can expand to all types of subsectors. For this reason, specific details may have slight discrepancies for each derivatives platform since each of them have their own unique intricacies. The examples below illustrate an idea of possible use cases of stETH. Keep in mind that these are currently only hypothetical ideas, and quite possibly some ideas are incompatible.
- 
 Synthetic-issuing protocols may allow stETH to be used as collateral to mint synths, similar to how lending protocols function. In this case, users will mint a synthetic asset that can be used/traded to track the performance of another asset that can even be unrelated to DeFi assets (eg. Gold, Silver, TSLA). Since synthetics have infinite liquidity, synthetic ETH can be pooled with stETH to allow for low slippage trades between the two assets. Synthetic swaps would allow for cross-asset trades between stETH to any supported synthetic asset.
  
 Insurance is another derivative. Although stETH may not have a use case for insurance, insurance can be bought to insure against any smart contract errors or validator slashings. Unslashed Finance recently partnered with Lido to insure against a 5% validator slashing. Future partnerships with other insurance protocols can further mitigate risks any stakers may have.

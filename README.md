@@ -491,8 +491,7 @@ In the future, stETH may also expand to put/call options.
 - Pool Contract: [`0x12edd9e2073E480cc546e1E0aD7F1c9D60c0cA1E`](https://goerli.etherscan.io/address/0x12edd9e2073E480cc546e1E0aD7F1c9D60c0cA1E)
 
 
-**Resources**
-#
+## **Resources**
 
 Onboarding: [https://www.notion.so/stETH-Collateral-Onboarding-Risk-Evaluation-1ea3a6fb4dbf4132b2c5347dbba0c9ec](https://www.notion.so/stETH-Collateral-Onboarding-Risk-Evaluation-1ea3a6fb4dbf4132b2c5347dbba0c9ec)
 

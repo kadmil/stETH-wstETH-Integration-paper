@@ -150,26 +150,6 @@ mapping between members and their reports, we just clean all existing reports an
 remaining oracles to push the same epoch again.
 
 
-## Add calculation of staker rewards [APR][1]
-
-To calculate the percentage of rewards for stakers, we store and provide the following data:
-
-- `preTotalPooledEther` - total pooled ether mount, queried right before every report push to the
-  [Lido contract][6],
-- `postTotalPooledEther` - the same, but queried right after the push,
-- `lastCompletedEpochId` - the last epoch that we pushed the report to the Lido,
-- `timeElapsed` - the time in seconds between the current epoch of push and the
-  `lastCompletedEpochId`. Usually, it should be a frame long: 32 _ 12 _ 225 = 86400, but maybe
-  multiples more in case that the previous frame didn't reach the quorum.
-
-
-**Note:** It is important to note here, that we collect post/pre pair (not current/last), to avoid
-the influence of new staking during the epoch.
-
-To calculate the APR, use the following formula:
-
-    APR = (postTotalPooledEther - preTotalPooledEther) * secondsInYear / (preTotalPooledEther * timeElapsed)
-
 ## Sanity checks the oracles reports by configurable values
 
 In order to limit the misbehaving oracles impact, we want to limit oracles report change by 10% APR
@@ -248,84 +228,9 @@ Price feed can give incorrect data in, as far as we can tell, three situations:
 - Multi-block flashloan attack. An block producer who is able to reliably get 2 blocks in a row can treat two blocks as an atomic transaction, leading to what is essentially a multiblock flashloan attack to manipulate price. That can lead to a short period of time (a few blocks) where stETH/ETH price feed is artificially manipulated. This attack is not mitigated, but in our opinion, not very realistic. It's very hard to pull off.
 
 
-# Oracle contract upgrade to v2
+## Oracle contract upgrade to v2
 
-The following changes are to be made to the first mainnet version of the oracle contract.
-
-
-## Change the meaning of 'quorum'.
-
-In the first version, the quorum value denoted the minimum number of oracles needed to successfully
-report results.
-
-The proposed change is that the governance-controlled 'quorum' value means the minimum number of
-exactly the same reports needed to *finalize* this epoch, which means that the final report is
-pushed to Lido, no more reports are accepted for this epoch and the new expected epoch is advanced
-to the next frame.
-
-The reason for that change is that all non-byzantine oracles need to report exactly the same values
-and if there are conflicting reports in the frame, it means some oracles are faulty or
-malicious. With an old system it took a majority of quorum of faulty oracles to push their values
-(e.g. 2 out of 3), with new system it takes a full quorum of them (3 out of 3).
-
-For example, if the quorum value is `5` and suppose the oracles report consequently: `100`, `100`,
-`101`, `0`, `100`, `100`, `100`: after the last, the report `100` wins because it was pushed 5
-times. So it is pushed to Lido, epoch is finalized and no more reports for this epoch are accepted.
-
-
-## Allow the number of oracle members to be less than the quorum value.
-
-Current oracle removal lever (`removeOracleMember`) doesn't allow to remove oracle members if it
-puts a number of members below quorum.
-
-The most likely reason for removing an oracle member is a malicious oracle. It's better to have an
-oracle with no quorum (as members are added or quorum value lowered by the voting process) than an
-oracle with a quorum but a malicious member in it.
-
-We implemented this by updating the restrictions (were `members.length >= _quorum`). Now the only
-way to update the quorum value is with its mutator (untouched since v1):
-
-    function setQuorum(uint256 _quorum) external auth(MANAGE_QUORUM)
-
-
-## Use only the first epoch of the current frame for oracles reporting.
-
-In the first version of the contract, we used "min/max reportable epoch" pair to determine the range
-of epochs that the contract currently accepts. This led to the overly complicated logic. In
-particular, we were keeping all report pushes for epochs of the current frame until one of them
-reaches quorum. And in case of oracle members updates or quorum value changes, we just invalidated
-all epochs except the last one (to avoid iterating over all epochs within the frame).
-
-So now we found it reasonable to use only one epoch for oracle reportings, the first epoch of the
-current frame. When an oracle reports a more recent epoch, we erase the current reporting data (even
-if it did not reach a quorum) and advance to the new epoch.
-
-**Warning**: Allowing only one epoch per frame (`_epochId % epochsPerFrame == 0`) is done to prevent a
-malicious oracle from spoiling the quorum by continuously reporting a new epoch.
-
-This change does not impact fair weather operations at all; the only setting where it is inferior to
-the original procedure is a very specific kind of theoretical long-term eth2 turbulence where eth2
-finality makes progress but lags behind last slot and that lag is 24h+ for a long time. It's been
-never observed in the testnets and experts on eth2 consensus say it's a very convoluted scenario. So
-we decided to axe it, and if it happens in the wild (which it won't), we can upgrade oracle back to
-handle it better.
-
-
-## SafeMath library.
-
-Using SafeMath library were removed where it could be easily proved that no value overflow or
-underflow may happen to save gas.
-
-In other cases, especially in dealing with externally provided data (public function arguments),
-SafeMath were still used.
-
-
-[1]: https://en.wikipedia.org/wiki/Annual_percentage_rate
-[2]: https://lido.fi/faq
-[3]: #add-calculation-of-staker-rewards-apr
-[4]: #sanity-checks-the-oracles-reports-by-configurable-values
-[5]: #receiver-function-to-be-invoked-on-report-pushes
-[6]: https://github.com/ethereum/eth2.0-specs/blob/dev/specs/phase0/beacon-chain.md#custom-types
+The following changes are to be made to the first mainnet version of the oracle contract. [More info](https://github.com/lidofinance/lido-improvement-proposals/blob/develop/LIPS/lip-2.md)
 
 # wstETH
 

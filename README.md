@@ -323,10 +323,10 @@ Liquidity pools are a primary structure in Lido’s ecosystem that helps maintai
  
 There are ongoing liquidity mining programs that are occurring with stETH and LDO. You can read more information about them here:
 
-- stETH-ETH Curve pool
-- LDO-ETH Onsen pool
-- Curve's stETH-ETH liquidity pool allows liquidity providers to simultaneously accrue trading fees, liquidity mining rewards (CRV, LDO), as well as Lido’s Eth2 reward rate.
-- SushiSwaps LDO-ETH Onsen pool allows liquidity providers to simultaneously accrue trading fees, liquidity mining rewards (SUSHI), as well as Lido’s Eth2 reward rate.
+- [stETH-ETH Curve pool](https://blog.lido.fi/providing-steth-liquidity-via-curve-to-receive-rewards)
+- [LDO-ETH Onsen pool](https://blog.lido.fi/liquidity-mining-with-sushiswap-onsen)
+- [Curve's stETH-ETH liquidity pool](https://curve.fi/steth) allows liquidity providers to simultaneously accrue trading fees, liquidity mining rewards (CRV, LDO), as well as Lido’s Eth2 reward rate.
+- [SushiSwaps LDO-ETH Onsen pool](https://app.sushiswap.fi/pair/0xc558f600b34a5f69dd2f0d06cb8a88d829b7420a) allows liquidity providers to simultaneously accrue trading fees, liquidity mining rewards (SUSHI), as well as Lido’s Eth2 reward rate.
  
 ## Lending
 Lending protocols can adopt stETH to allow users to borrow assets while simultaneously accruing Eth2 rewards while still being staked as collateral.

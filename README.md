@@ -1,12 +1,16 @@
 # stETH & wstETH Integration Guide
 
-[![Supported by LEGO](https://img.shields.io/badge/Supported%20by-LEGO-%2300A3FF)](https://www.notion.so/LEGO-Lido-Ecosystem-Grants-Organisation-d7f0bf0182d44348b6173639d2e8363d)   
+[![Supported by LEGO](https://img.shields.io/badge/Supported%20by-LEGO-%2300A3FF)](https://www.notion.so/LEGO-Lido-Ecosystem-Grants-Organisation-d7f0bf0182d44348b6173639d2e8363d)  
+
+#### Navigation 
+
+
 
 ### What stETH is
 
-Normally users need to run own node and require at least 32ETH to participate in ETH 2.0. Funds will be locked until it is released. But with LIDO which allows users to stake their ETH into the ETH2.0 PoS network, anyone can stake  ETH and get back stETH + the x% staking reward from ETH2.0. The benefit of this is that stETH can be swapped for ETH at any time so users are no longer locked until ETH2.0 is released. 
+Normally users need to run own node and require at least 32ETH to participate in ETH 2.0. Funds will be locked until it is released. But with LIDO which allows users to stake their ETH into the ETH2.0 PoS network, anyone can stake  ETH and get back stETH + the x% staking reward from ETH2.0. The benefit of this is that stETH can be swapped for ETH at any time so users are no longer locked until ETH2.0 is released. The stETH token is a tokenized version of staked ether. 
 
-The stETH token is a tokenized version of staked ether. When a user sends ether into the Lido liquid staking smart contract, the user receives the corresponding amount of stETH tokens. The stETH token represents Lido user’s deposits and the corresponding staking rewards and slashing penalties. It is also is a liquid alternative for the staked ether: it could be transferred, traded, or used in DeFi applications. The stETH token balance is be calculated based on the total amount of staked ether, plus rewards and minus any slashing penalties.
+When a user sends ether into the Lido liquid staking smart contract, the user receives the corresponding amount of stETH tokens. The stETH token represents Lido user’s deposits and the corresponding staking rewards and slashing penalties. It is also is a liquid alternative for the staked ether: it could be transferred, traded, or used in DeFi applications. The stETH token balance is be calculated based on the total amount of staked ether, plus rewards and minus any slashing penalties.
 
 #
 
@@ -21,48 +25,74 @@ The DAO selects node operators, which also validate transactions on the beacon c
 
 ![stETH infrastructure](./01.png)
 
-StETH is a rebasable token. It receives reports from the Oracle contract `pushBeacon method` with the state of the protocol's ETH2 validators balances, and updates all the balances of stETH holders distributing the protocol's total staking rewards and penalties. The protocol employs distributed Oracle reporting: there are five Oracle daemons running by the Lido Node operators, and the Oracle smart contract formats beacon report on the consensus of three of five daemon reports. On top of the consensus mechanics, there are sanity checks for reports with sudden drops in total ETH2 balance or rewards with higher-than-possible APY. 
 
-stETH is very good collateral for people who are long Ethereum, as it lets them at once margin long ETH and compounds it with staking rewards. Staking rewards alone can pay off stability fee if it's sufficiently low. The protocol applies a 10% fee (this can be changed by the DAO) on staking rewards that are split between node operators, the DAO, and a slashing insurance fund.
-
-Node operators also validate transactions on the beacon chain. The DAO selects node operators and adds their addresses to the NodeOperatorsRegistry contract. Authorized node operators have to generate a set of keys for the validation and also provide them with the smart contract. As ether is received from users, it is distributed in chunks of 32 Ether between all active node operators. The staking pool contract contains a list of node operators, their keys, and the logic for distributing rewards between them.
-
-**Note:** 
-
-- As stETH is a rebasable token and integration of this asset requires a custom `GemJoin` contract. An easier and less risky way is to integrate wstETH, a trustless fixed-balance wrapper ([https://docs.lido.fi/contracts/wsteth](https://docs.lido.fi/contracts/wsteth)), and use the standard `GemJoin` contract. StETH token is the upgradable contract behind `AppProxyUpgradeable` proxy at [Etherscan](https://etherscan.io/address/0xae7ab96520de3a18e5e111b5eaab095312d7fe84). 
+# Use cases in DeFi
 
 
-## Tokenomics
+## Liquidity Pools
 
-Beacon chain's withdrawals are scheduled after merge which should happen around Q1-Q2 2022. Once these features are deployed, the Lido DAO will upgrade Lido to allow the users to burn stETH tokens in exchange for ether. 
+Liquidity pools are collections of liquidity which consist of tokens which can be seamlessly exchanged with one another through the use of AMMs (automated market makers). Popular examples of platforms that use liquidity pool AMMs are Uniswap, Curve, and SushiSwap.
+ 
+stETH can be pooled together with vanilla ETH in a liquidity pool. This in turn allows users to indirectly unstake their ETH and receive their initial ETH deposit back via pool swaps, bypassing the time required to wait for transactions on Eth2 to be enabled if a user decides that they would like to unstake.
+ 
+![stETH ETH pool on Curve Finance](./03.png)
+ 
+Due to stETH’s relationship with vanilla ETH (users will be able to redeem an equivalent amount of ETH for stETH once transactions are enabled), we hope this will result in less impermanent loss for liquidity providers compared to other conventional liquidity pools - allowing for liquidity providers to gain trading fees without engaging in too much risk - as well as to help hold the peg between the two assets.
+ 
+Liquidity pools are a primary structure in Lido’s ecosystem that helps maintain stETH as the liquid equivalent of vanilla ETH. Without liquidity pools, users will not be able to unstake until transactions are enabled, breaking a core aspect of Lido’s manifesto.
+ 
+There are ongoing liquidity mining programs that are occurring with stETH and LDO. You can read more information about them here:
 
-[wstETH](https://docs.lido.fi/contracts/wsteth) is a constant-balance wrapper ERC20 token that converts stETH balances which undergo periodical rebases to the underlying shares balances. As Lido oracles report beacon chain rewards, penalties, or slashings, wstETH token balances remain unchanged: instead, the amount of stETH corresponding to one wstETH (and thus wstETH price) changes. Anyone can convert stETH to wstETH and vice versa on-chain through [wstETH.wrap](https://docs.lido.fi/contracts/wsteth#wrap) and [wstETH.unwrap](https://docs.lido.fi/contracts/wsteth#unwrap) functions.
+- [stETH-ETH Curve pool](https://blog.lido.fi/providing-steth-liquidity-via-curve-to-receive-rewards)
 
-Since wstETH and stETH represent the same underlying asset (Ether staked with Lido plus the rewards accrued) and can be mutually converted at any given time, one can consider the combination of wstETH and stETH liquidity on all exchanges as contributing to a common liquidity pool. stETH price can be converted to wstETH price by multiplying the former by a coefficient obtained from either stETH or wstETH contract.
+- [LDO-ETH Onsen pool](https://blog.lido.fi/liquidity-mining-with-sushiswap-onsen)
 
-**Note:**
+- [Curve's stETH-ETH liquidity pool](https://curve.fi/steth) allows liquidity providers to simultaneously accrue trading fees, liquidity mining rewards (CRV, LDO), as well as Lido’s Eth2 reward rate.
 
-- stETH totalShare does not change downwards in case of slash. In case of slash the amount of stETH corresponding to share changes.
+- [SushiSwaps LDO-ETH Onsen pool](https://app.sushiswap.fi/pair/0xc558f600b34a5f69dd2f0d06cb8a88d829b7420a) allows liquidity providers to simultaneously accrue trading fees, liquidity mining rewards (SUSHI), as well as Lido’s Eth2 reward rate.
+ 
+## Lending
+
+Lending protocols can adopt stETH to allow users to borrow assets while simultaneously accruing Eth2 rewards while still being staked as collateral.
+ 
+To do so, stETH must first be wrapped to be applicable as collateral. This opens up an extra layer of efficiency and composability when it comes to the DeFi ecosystem in relation to yield farming and borrowing. Some examples of lending protocols that may adopt stETH are: Aave, Maker, Compound, Cream, Alpha).
+ 
+The addition of stETH as collateral in lending protocols allows for advanced composable yield farming strategies. A user will be able to deposit stETH as collateral and take out an ETH loan to be further swapped back to stETH to add to their existing loan as a sort of leveraged position. Alternatively, ETH borrowed can be put to other purposes, such as: staking in Lido, depositing into other strategies, providing it as liquidity in a liquidity pool, etc.
+ 
+Price fluctuations of the underlying collateral asset still play a large role in determining a user's health ratio and liquidation risk. Although, this theoretically allows users - who stake stETH as collateral while borrowing a position - to constantly improve their health ratio whilst constantly diminishing the possibilities of any unwanted liquidations.
+ 
+Lending protocols may also allow for the borrowing of stETH in the form of a loan. This would allow users to take out a loan that is, in essence, constantly paying off itself. If there are many people that would like to borrow stETH, suppliers can also earn yield on their stETH as well, earning the Eth2 rate simultaneously with the variable lending rate.
+ 
+Proposals have been shared on the governance forums of certain lending protocols. Users have discussed the possibilities of adding stETH as collateral. You can read more information about it here:
+
+- [Maker stETH onboarding proposal](https://forum.makerdao.com/t/steth-mip6-collateral-onboarding/5762)
+
+- [Collateral onboarding call with Maker](https://forum.makerdao.com/t/collateral-onboarding-call-25-lido-wednesday-january-27-18-00-utc/6135/6)
+
+- [Aave stETH onboarding proposal](https://governance.aave.com/t/proposal-add-support-for-steth-lido/2123)
+
+Although stETH is a freely tradable asset it does have issues when being used as collateral. Most DEXs and AAVE do not support rebasing of assets locked into the protocol. So depositing stETH into AAVE will lead user to losing rewards for the time that it is locked. LIDO has already solved this with creating wrapped stETH (Wrapped stETH (wstETH) | Lido: Help). 
+
+In a nutshell, user locks stETH into a contract that returns wstETH to him. This wstETH can be locked into any DEX or lending platform while the stETH user wrapped accrues staking rewards in the background. When user unwraps wstETH he will receive stETH deposited + rewards. This is done in a similar way to how aUST can usually be traded for more UST since aUST represents deposited UST with interest earned.
+ 
+## Strategies/Aggregators
+
+Aggregators can use stETH in their yield farming strategies as an additional yield layer on top of their already existing yield farming. Strategies are flexible and can maximize the highest yield possible for their users. Popular examples of yield aggregators include: Yearn, Harvest, Badger.
+ 
+These strategies can utilize a variety of other protocols/initiatives to generate this high yield, such as: farming through liquidity mining incentives, earning yield through lending protocols (as discussed prior), earning yield through native protocol staking, and so on.
+
+![stETH on Harvest Finance](./04.png)
 
 
-## Mechanics of stETH
+An example of an existing strategy is the st. Ether-ETH pool, which uses the liquidity mining rewards earned from providing liquidity in the Curve stETH-ETH pool to automatically compound into stETH/ETH which is used to stake back into the pool.
+ 
+With the addition of lending protocols adopting stETH as collateral, new strategies can be implemented utilizing the borrowed assets taken as a loan. Users can provide their stETH as collateral, borrow a position, then use those borrowed assets for a variety of yield farming opportunities, such as providing liquidity into the Curve pool, providing liquidity into the Onsen pool, borrowing another position, and more.
+ 
+## Derivatives
 
-stETH token balances update once a day when the oracle reports changes in Eth2 deposits and changes in ETH rewards from users who stake via Lido. This occurs once a day at 12PM UTC. Because the rewards are embodied through a balance rebase, users who hold stETH will not see a transaction sent to their wallet. Rather, users should see their stETH balance automatically change without an accompanying transaction taking place.
-
-This rebase works across integrated DeFi platforms like Curve and Yearn. This means that if you are to stake your stETH across these protocols to earn additional yields, you will continue to benefit from daily stETH staking rewards as well. UniSwap, 1inch and SushiSwap are not designed for rebasable tokens and as a result you risk losing out on a portion of your daily staking rewards through providing stETH as liquidity across these platforms. When a user deposits ETH via Lido, that ETH is split between node operators which is then sent to their respective validators.
-
-**Note:**
-
-- While there is no way to take out ETH, totalShare should increase as the amount of tainted assets increases. Technically, you could burn stETH to reduce totalShare, but in practice this does not happen. Lido may resort to this mechanism to handle slashing + slashing insurance, or to deal with MEVs, but so far there has been no occasion to do so.
-
-## The stETH Reward Rate
-
-Users who stake their ETH with Lido will receive daily rewards - in the form of stETH balance rebases - from day one. This is possible because staking rewards with Lido are socialised across all stakers. Rebases affect all holders of stETH regardless of whether their ETH has actually been deposited into the queue as of yet.
-This mechanism is the reason why the stETH reward rate is currently lower than that of Ethereum.
-
-Only a portion of Lido validators have made it through the queue, from which all existing stETH holders are accruing their rewards – including the new depositors. This results in an initially lower reward rate because the amount of rewards being accrued from the minority of already accepted validators is being split proportionally towards all stETH holders. As more of Lido’s validators are activated, the stETH reward rate will grow correspondingly and gravitate towards the full Ethereum staking rate. To track the Eth validator queue, visit eth2-validator-queue.web.app.
-
-A dashboard to view these validators (and their time in queue alongside their estimated finalizing date) is currently being developed. This dashboard will also display related information such as: number of current validators, rewards being paid out to stETH holders, total amount of ETH staked via Lido, the active number of stakers, Lido APY, Eth2 APY.
+Synthetic-issuing protocols may allow stETH to be used as collateral to mint synths, similar to how lending protocols function. In this case, users will mint a synthetic asset that can be used/traded to track the performance of another asset that can even be unrelated to DeFi assets (eg. Gold, Silver, TSLA). Since synthetics have infinite liquidity, synthetic ETH can be pooled with stETH to allow for low slippage trades between the two assets. Synthetic swaps would allow for cross-asset trades between stETH to any supported synthetic asset.
+ 
+Insurance is another derivative. Although stETH may not have a use case for insurance, insurance can be bought to insure against any smart contract errors or validator slashings. Unslashed Finance recently partnered with Lido to insure against a 5% validator slashing. Future partnerships with other insurance protocols can further mitigate risks any stakers may have.
 
 # Rebases & beacon chain Oracle
 
@@ -112,6 +142,44 @@ Therefore:
 balanceOf(Alice) -> 2 tokens which corresponds 2 ETH
 balanceOf(Bob) -> 8 tokens which corresponds 8 ETH
 ```
+
+StETH is a rebasable token. It receives reports from the Oracle contract `pushBeacon method` with the state of the protocol's ETH2 validators balances, and updates all the balances of stETH holders distributing the protocol's total staking rewards and penalties. The protocol employs distributed Oracle reporting: there are five Oracle daemons running by the Lido Node operators, and the Oracle smart contract formats beacon report on the consensus of three of five daemon reports. On top of the consensus mechanics, there are sanity checks for reports with sudden drops in total ETH2 balance or rewards with higher-than-possible APY. 
+
+**Note:** 
+
+- As stETH is a rebasable token and integration of this asset requires a custom `GemJoin` contract. An easier and less risky way is to integrate wstETH, a trustless fixed-balance wrapper ([https://docs.lido.fi/contracts/wsteth](https://docs.lido.fi/contracts/wsteth)), and use the standard `GemJoin` contract. StETH token is the upgradable contract behind `AppProxyUpgradeable` proxy at [Etherscan](https://etherscan.io/address/0xae7ab96520de3a18e5e111b5eaab095312d7fe84). 
+
+
+## Tokenomics
+
+Beacon chain's withdrawals are scheduled after merge which should happen around Q1-Q2 2022. Once these features are deployed, the Lido DAO will upgrade Lido to allow the users to burn stETH tokens in exchange for ether. 
+
+[wstETH](https://docs.lido.fi/contracts/wsteth) is a constant-balance wrapper ERC20 token that converts stETH balances which undergo periodical rebases to the underlying shares balances. As Lido oracles report beacon chain rewards, penalties, or slashings, wstETH token balances remain unchanged: instead, the amount of stETH corresponding to one wstETH (and thus wstETH price) changes. Anyone can convert stETH to wstETH and vice versa on-chain through [wstETH.wrap](https://docs.lido.fi/contracts/wsteth#wrap) and [wstETH.unwrap](https://docs.lido.fi/contracts/wsteth#unwrap) functions.
+
+Since wstETH and stETH represent the same underlying asset (Ether staked with Lido plus the rewards accrued) and can be mutually converted at any given time, one can consider the combination of wstETH and stETH liquidity on all exchanges as contributing to a common liquidity pool. stETH price can be converted to wstETH price by multiplying the former by a coefficient obtained from either stETH or wstETH contract.
+
+**Note:**
+
+- stETH totalShare does not change downwards in case of slash. In case of slash the amount of stETH corresponding to share changes.
+
+
+## Mechanics of stETH
+
+stETH token balances update once a day when the oracle reports changes in Eth2 deposits and changes in ETH rewards from users who stake via Lido. This occurs once a day at 12PM UTC. Because the rewards are embodied through a balance rebase, users who hold stETH will not see a transaction sent to their wallet. Rather, users should see their stETH balance automatically change without an accompanying transaction taking place.
+
+This rebase works across integrated DeFi platforms like Curve and Yearn. This means that if you are to stake your stETH across these protocols to earn additional yields, you will continue to benefit from daily stETH staking rewards as well. UniSwap, 1inch and SushiSwap are not designed for rebasable tokens and as a result you risk losing out on a portion of your daily staking rewards through providing stETH as liquidity across these platforms. When a user deposits ETH via Lido, that ETH is split between node operators which is then sent to their respective validators.
+
+**Note:**
+
+- While there is no way to take out ETH, totalShare should increase as the amount of tainted assets increases. Technically, you could burn stETH to reduce totalShare, but in practice this does not happen. Lido may resort to this mechanism to handle slashing + slashing insurance, or to deal with MEVs, but so far there has been no occasion to do so.
+
+## The stETH Reward Rate
+
+Users who stake their ETH with Lido will receive daily rewards - in the form of stETH balance rebases - from day one. This is possible because staking rewards with Lido are socialised across all stakers. Rebases affect all holders of stETH regardless of whether their ETH has actually been deposited into the queue as of yet.
+This mechanism is the reason why the stETH reward rate is currently lower than that of Ethereum.
+
+Only a portion of Lido validators have made it through the queue, from which all existing stETH holders are accruing their rewards – including the new depositors. This results in an initially lower reward rate because the amount of rewards being accrued from the minority of already accepted validators is being split proportionally towards all stETH holders. As more of Lido’s validators are activated, the stETH reward rate will grow correspondingly and gravitate towards the full Ethereum staking rate. To track the Eth validator queue, visit eth2-validator-queue.web.app.
+
 
 ## Beacon Stats Reporting
 
@@ -328,89 +396,36 @@ wstETH implements [EIP-2612 Permit](https://eips.ethereum.org/EIPS/eip-2612) sta
 
 
 
-# Use cases in DeFi
+### **Resources**
 
+Onboarding: [https://www.notion.so/stETH-Collateral-Onboarding-Risk-Evaluation-1ea3a6fb4dbf4132b2c5347dbba0c9ec](https://www.notion.so/stETH-Collateral-Onboarding-Risk-Evaluation-1ea3a6fb4dbf4132b2c5347dbba0c9ec) 
 
-## Liquidity Pools
-
-Liquidity pools are collections of liquidity which consist of tokens which can be seamlessly exchanged with one another through the use of AMMs (automated market makers). Popular examples of platforms that use liquidity pool AMMs are Uniswap, Curve, and SushiSwap.
- 
-stETH can be pooled together with vanilla ETH in a liquidity pool. This in turn allows users to indirectly unstake their ETH and receive their initial ETH deposit back via pool swaps, bypassing the time required to wait for transactions on Eth2 to be enabled if a user decides that they would like to unstake.
- 
-![stETH ETH pool on Curve Finance](./03.png)
- 
-Due to stETH’s relationship with vanilla ETH (users will be able to redeem an equivalent amount of ETH for stETH once transactions are enabled), we hope this will result in less impermanent loss for liquidity providers compared to other conventional liquidity pools - allowing for liquidity providers to gain trading fees without engaging in too much risk - as well as to help hold the peg between the two assets.
- 
-Liquidity pools are a primary structure in Lido’s ecosystem that helps maintain stETH as the liquid equivalent of vanilla ETH. Without liquidity pools, users will not be able to unstake until transactions are enabled, breaking a core aspect of Lido’s manifesto.
- 
-There are ongoing liquidity mining programs that are occurring with stETH and LDO. You can read more information about them here:
-
-- [stETH-ETH Curve pool](https://blog.lido.fi/providing-steth-liquidity-via-curve-to-receive-rewards)
-
-- [LDO-ETH Onsen pool](https://blog.lido.fi/liquidity-mining-with-sushiswap-onsen)
-
-- [Curve's stETH-ETH liquidity pool](https://curve.fi/steth) allows liquidity providers to simultaneously accrue trading fees, liquidity mining rewards (CRV, LDO), as well as Lido’s Eth2 reward rate.
-
-- [SushiSwaps LDO-ETH Onsen pool](https://app.sushiswap.fi/pair/0xc558f600b34a5f69dd2f0d06cb8a88d829b7420a) allows liquidity providers to simultaneously accrue trading fees, liquidity mining rewards (SUSHI), as well as Lido’s Eth2 reward rate.
- 
-## Lending
-
-Lending protocols can adopt stETH to allow users to borrow assets while simultaneously accruing Eth2 rewards while still being staked as collateral.
- 
-To do so, stETH must first be wrapped to be applicable as collateral. This opens up an extra layer of efficiency and composability when it comes to the DeFi ecosystem in relation to yield farming and borrowing. Some examples of lending protocols that may adopt stETH are: Aave, Maker, Compound, Cream, Alpha).
- 
-The addition of stETH as collateral in lending protocols allows for advanced composable yield farming strategies. A user will be able to deposit stETH as collateral and take out an ETH loan to be further swapped back to stETH to add to their existing loan as a sort of leveraged position. Alternatively, ETH borrowed can be put to other purposes, such as: staking in Lido, depositing into other strategies, providing it as liquidity in a liquidity pool, etc.
- 
-Price fluctuations of the underlying collateral asset still play a large role in determining a user's health ratio and liquidation risk. Although, this theoretically allows users - who stake stETH as collateral while borrowing a position - to constantly improve their health ratio whilst constantly diminishing the possibilities of any unwanted liquidations.
- 
-Lending protocols may also allow for the borrowing of stETH in the form of a loan. This would allow users to take out a loan that is, in essence, constantly paying off itself. If there are many people that would like to borrow stETH, suppliers can also earn yield on their stETH as well, earning the Eth2 rate simultaneously with the variable lending rate.
- 
-Proposals have been shared on the governance forums of certain lending protocols. Users have discussed the possibilities of adding stETH as collateral. You can read more information about it here:
-
-- [Maker stETH onboarding proposal](https://forum.makerdao.com/t/steth-mip6-collateral-onboarding/5762)
-
-- [Collateral onboarding call with Maker](https://forum.makerdao.com/t/collateral-onboarding-call-25-lido-wednesday-january-27-18-00-utc/6135/6)
-
-- [Aave stETH onboarding proposal](https://governance.aave.com/t/proposal-add-support-for-steth-lido/2123)
-
-Although stETH is a freely tradable asset it does have issues when being used as collateral. Most DEXs and AAVE do not support rebasing of assets locked into the protocol. So depositing stETH into AAVE will lead user to losing rewards for the time that it is locked. LIDO has already solved this with creating wrapped stETH (Wrapped stETH (wstETH) | Lido: Help). 
-
-In a nutshell, user locks stETH into a contract that returns wstETH to him. This wstETH can be locked into any DEX or lending platform while the stETH user wrapped accrues staking rewards in the background. When user unwraps wstETH he will receive stETH deposited + rewards. This is done in a similar way to how aUST can usually be traded for more UST since aUST represents deposited UST with interest earned.
- 
-## Strategies/Aggregators
-
-Aggregators can use stETH in their yield farming strategies as an additional yield layer on top of their already existing yield farming. Strategies are flexible and can maximize the highest yield possible for their users. Popular examples of yield aggregators include: Yearn, Harvest, Badger.
- 
-These strategies can utilize a variety of other protocols/initiatives to generate this high yield, such as: farming through liquidity mining incentives, earning yield through lending protocols (as discussed prior), earning yield through native protocol staking, and so on.
-
-![stETH on Harvest Finance](./04.png)
-
-
-An example of an existing strategy is the st. Ether-ETH pool, which uses the liquidity mining rewards earned from providing liquidity in the Curve stETH-ETH pool to automatically compound into stETH/ETH which is used to stake back into the pool.
- 
-With the addition of lending protocols adopting stETH as collateral, new strategies can be implemented utilizing the borrowed assets taken as a loan. Users can provide their stETH as collateral, borrow a position, then use those borrowed assets for a variety of yield farming opportunities, such as providing liquidity into the Curve pool, providing liquidity into the Onsen pool, borrowing another position, and more.
- 
-## Derivatives
-
-Synthetic-issuing protocols may allow stETH to be used as collateral to mint synths, similar to how lending protocols function. In this case, users will mint a synthetic asset that can be used/traded to track the performance of another asset that can even be unrelated to DeFi assets (eg. Gold, Silver, TSLA). Since synthetics have infinite liquidity, synthetic ETH can be pooled with stETH to allow for low slippage trades between the two assets. Synthetic swaps would allow for cross-asset trades between stETH to any supported synthetic asset.
- 
-Insurance is another derivative. Although stETH may not have a use case for insurance, insurance can be bought to insure against any smart contract errors or validator slashings. Unslashed Finance recently partnered with Lido to insure against a 5% validator slashing. Future partnerships with other insurance protocols can further mitigate risks any stakers may have.
-
-## **Resources**
-
-Onboarding: [https://www.notion.so/stETH-Collateral-Onboarding-Risk-Evaluation-1ea3a6fb4dbf4132b2c5347dbba0c9ec](https://www.notion.so/stETH-Collateral-Onboarding-Risk-Evaluation-1ea3a6fb4dbf4132b2c5347dbba0c9ec)
 Lido White Paper: [https://lido.fi/static/Lido:Ethereum-Liquid-Staking.pdf](https://lido.fi/static/Lido:Ethereum-Liquid-Staking.pdf)
+
 Lido Website: [https://lido.fi](https://lido.fi/)
+
 Lido Blog: [http://blog.lido.fi](http://blog.lido.fi) 
+
 CoinMarketCap: [https://coinmarketcap.com/currencies/steth/historical-data/](https://coinmarketcap.com/currencies/steth/historical-data/)
+
 CoinGecko: [https://www.coingecko.com/en/coins/lido-staked-ether/historical_data/eth](https://www.coingecko.com/en/coins/lido-staked-ether/historical_data/eth)
+
 Ether Scan Lido Contract: [https://etherscan.io/token/0xae7ab96520de3a18e5e111b5eaab095312d7fe84](https://www.notion.so/20de3a18e5e111b5eaab095312d7fe84)
+
 Dune Analytics: [https://duneanalytics.com/k06a/lido-finance](https://duneanalytics.com/k06a/lido-finance)
+
 Nansen: [https://pro.nansen.ai/lido](https://pro.nansen.ai/lido)
+
 Concerning stETH liquidity: [https://blog.lido.fi/concerning-steth-liquidity/](https://blog.lido.fi/concerning-steth-liquidity/)
+
 Risks Calculation: [https://drive.google.com/file/d/1n6pdXKMxaRjxQfZi9WBJXnbD96SNYdxH/view](https://drive.google.com/file/d/1n6pdXKMxaRjxQfZi9WBJXnbD96SNYdxH/view)
+
 Volatility Calculations: [https://colab.research.google.com/drive/1qEsWlsAPKqZgJUhazISPB6Ytcd1MeFGV?usp=sharing](https://colab.research.google.com/drive/1qEsWlsAPKqZgJUhazISPB6Ytcd1MeFGV?usp=sharing)
+
 Pictures: [https://morioh.com/p/79d43d9d161a](https://morioh.com/p/79d43d9d161a)
+
 Lido Docs: [docs.lido.fi](docs.lido.fi)
+
 Oracle V2: [https://github.com/lidofinance/lido-improvement-proposals/blob/develop/LIPS/lip-2.md](https://github.com/lidofinance/lido-improvement-proposals/blob/develop/LIPS/lip-2.md)
+
 LEGO Program: [https://www.notion.so/stETH-wstETH-Integration-guide-outline-a9ed150deb3c4c38a9d78aec221d55b5](https://www.notion.so/stETH-wstETH-Integration-guide-outline-a9ed150deb3c4c38a9d78aec221d55b5)

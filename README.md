@@ -1837,10 +1837,105 @@ Shortcut to stake ETH and auto-wrap returned stETH
 receive() payable
 ```
 
+# [WSTETH] ERC20 Token Smart Contract Technical Assessment
 
-1. What the wstETH is & how it works
-2. `wrap`/`unwrap` & rewards accounting
-3. How to use `permit`
-4. Price feed for wstETH
-5. Liquidation issues with steth
+## Technical Information
+
+Compiler version: v0.6.12+commit.27d51765
+Decimals: 18
+Overflow checks: Yes, the contract uses the OpenZeppelin's `SafeMath` library for uint operations.
+Mitigation against allowance race-condition: No.
+Upgradeable contract patterns: No.
+Access control or restriction lists: No.
+Non-standard features or behaviors: Yes, the functions for wrapping/unwrapping stETH tokens to wstETH and back.
+
+## Formal Verification Considerations
+
+Does transfer have simple semantics? Yes.
+
+Does transferFrom have simple semantics? Yes.
+
+Can balances be arbitrarily modified by some actor? No.
+
+Are there any external calls? Yes: wstETH calls to stETH upon wrapping/unwrapping to/from stETH (`wrap` and `unwrap` functions) and from ETH (the `receive() payable` function). The standard ERC20 interface methods don't issue any external calls.
+
+## Testnet Information
+
+wstETH is deployed on Görli at https://goerli.etherscan.io/address/0x6320cd32aa674d2898a68ec82e869385fc5f7e2f and uses the Görli deployment of stETH at https://goerli.etherscan.io/address/0x1643E812aE58766192Cf7D2Cf9567dF2C37e9B7F.
+
+## Contract Logic Summary
+
+[wstETH](https://docs.lido.fi/contracts/wsteth) is a permissionless constant-balance wrapper token for the rebasing [stETH](https://docs.lido.fi/contracts/lido), the main Ethereum liquid staking token by Lido.
+
+The amount of stETH an address holds corresponds to the amount of staked ETH plus the Beacon chain rewards accrued and/or penalties inflicted. After withdrawals are enabled in the Merge network, one would be able to convert stETH to ETH 1:1 using the Lido protocol.
+
+To reflect Beacon chain rewards and/or penalties, balances of all stETH holders are adjusted daily according to the Beacon validators state reported by a quorum of Lido Oracles. In contrast, wstETH token balances remain unchanged: instead, the amount of stETH corresponding to one wstETH changes. Anyone can convert stETH to wstETH and vice versa on-chain through [`wstETH.wrap`](https://docs.lido.fi/contracts/wsteth#wrap) and [`wstETH.unwrap`](https://docs.lido.fi/contracts/wsteth#unwrap) functions.
+
+### Administrative Addresses
+
+No administrative access is built into wstETH.
+
+Note that stETH contract has admin functions that could affect wstETH market value:
+1) stETH is an upgradable contract, with the upgrade requiring the a DAO vote performed among LDO holders. Voting app is: https://etherscan.io/address/0x2e59a20f205bb85a89c53f1936454680651e618e.
+2) The Lido protocol can be stopped by a DAO vote performed among LDO holders. This won't affect wstETH contract in any way except wrapping stETH to wstETH and unwrapping wstETH to stETH won't be possible. Voting app is: https://etherscan.io/address/0x2e59a20f205bb85a89c53f1936454680651e618e. 
+3) stETH balances are adjusted upon Lido Oracle reports. This operation doesn't affect wstETH balances in any way. Oracle contract is: https://etherscan.io/address/0x442af784A788A5bd6F42A01Ebe9F287a871243fb
+
+### Inheritance Structure
+
+The token contract inherits from the OpenZeppelin's `ERC20Permit`.
+
+## Other
+
+wstETH implements [EIP-2612 Permit](https://eips.ethereum.org/EIPS/eip-2612) standard for `secp256k1`-signed approvals.
+
+
+## Supporting materials
+
+### Architecture Diagram
+![](https://i.imgur.com/Eo5cqTk.png)
+Created using [ConsenSys Diligence’s Surya](https://github.com/consensys/surya)
+
+### Inheritance Diagram
+![](https://i.imgur.com/DcBXsxU.png)
+Created using [ConsenSys Diligence’s Surya](https://github.com/consensys/surya)
+
+### Sūrya’s Description Report
+
+#### Files Description Table
+
+
+|  File Name  |  SHA-1 Hash  |
+|-------------|--------------|
+| contracts/0.6.12/WstETH.sol | 923c4aa6c60bcca871d7ca75239b8188196e89b9 |
+
+
+#### Contracts Description Table
+
+
+|  Contract  |         Type        |       Bases      |                  |                 |
+|:----------:|:-------------------:|:----------------:|:----------------:|:---------------:|
+|     └      |  **Function Name**  |  **Visibility**  |  **Mutability**  |  **Modifiers**  |
+||||||
+| **WstETH** | Implementation | ERC20Permit |||
+| └ | <Constructor> | Public ❗️ | 🛑  | ERC20Permit ERC20 |
+| └ | wrap | External ❗️ | 🛑  |NO❗️ |
+| └ | unwrap | External ❗️ | 🛑  |NO❗️ |
+| └ | <Receive Ether> | External ❗️ |  💵 |NO❗️ |
+| └ | getWstETHByStETH | External ❗️ |   |NO❗️ |
+| └ | getStETHByWstETH | External ❗️ |   |NO❗️ |
+| └ | stEthPerToken | External ❗️ |   |NO❗️ |
+| └ | tokensPerStEth | External ❗️ |   |NO❗️ |
+
+#### Legend
+
+|  Symbol  |  Meaning  |
+|:--------:|-----------|
+|    🛑    | Function can modify state |
+|    💵    | Function is payable |
+
+
+
+Address(es) :
+        wstETH: 0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0
+        stETH: 0xae7ab96520de3a18e5e111b5eaab095312d7fe84 (proxy)
 

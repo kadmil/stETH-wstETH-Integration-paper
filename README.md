@@ -518,47 +518,45 @@ Insurance is another derivative. Although stETH may not have a use case for insu
  
 In the future, stETH may also expand to put/call options.
 
-# Bief FAQ:
+# Brief FAQ:
 
 
-1. What purpose does wstETH serve? I assume mostly as a replacement for the stETH token in LPs that don't work correctly with elastic supply tokens, which is essentially stETH. are there other reasons for wrapping stETH in wstETH?
+**1.** What purpose does wstETH serve? I assume mostly as a replacement for the stETH token in LPs that don't work correctly with elastic supply tokens, which is essentially stETH. are there other reasons for wrapping stETH in wstETH?
 
 - Right, wstETH can be used instead of stETH in integrations with protocols that do not support rebasable tokens. AMM, bridges between blockchains and money markets (marker, aave etc) are most important.
 
 
-2. How much can the price of wstETH change after unwrap relative to the original stETH? what circumstances can cause this?
+**2.** How much can the price of wstETH change after unwrap relative to the original stETH? what circumstances can cause this?
 
 - The amount of stETH obtained after unwrap corresponds to the amount of stETH that would have been in the wallet even without wrapping the asset in wstETH.
 
-2.1 What if others occur between the wrap and unwrap operations, how will they affect the value obtained after unwrap, compared to the original? 
+**2.1** What if others occur between the wrap and unwrap operations, how will they affect the value obtained after unwrap, compared to the original? 
 
 - Wrap 10 stheth->hold wsteth->unwrap is identical to hold 10 steth. Deposit/withdraw does not affect the amount after unwrap, reward/slash/burn has the same effect as for the corresponding amount of steth. Holding wsteth is absolutely identical to holding the same amount of wsteth
 
-3. The wrap function wstETH fixes a value in the contract that is essentially the numerator of the fraction share/totalShare. Conventionally, this is the value of share of stETH; After wrap the data of stETH token can change - the denominator (totalShare) can decrease e.g. because of the slash. If afterwards you execute unwrap, the numerator will have the same value of share of stETH; the ratio share/totalShare may be much higher than the original one.
+**3.** The wrap function wstETH fixes a value in the contract that is essentially the numerator of the fraction share/totalShare. Conventionally, this is the value of share of stETH; After wrap the data of stETH token can change - the denominator (totalShare) can decrease e.g. because of the slash. If afterwards you execute unwrap, the numerator will have the same value of share of stETH; the ratio share/totalShare may be much higher than the original one.
 
 - TotalShare does not change from slashing, it changes from deposits, withdrawals and burn. As a result, withdrawals and burn share/totalShare may increase.
 
 
-3.1 Can this ratio exceed 1 and cause an error?
+**3.1** Can this ratio exceed 1 and cause an error?
 
 - The denominator of the fraction share/totalShare is calculated as the sum of all shares, so it cannot be less than the numerator. The ratio can be equal to one in the theoretical case if the address is the only holder of stETH.
 
 
-3.2 stETH totalShare changes downward only in case of slash ? 
+**3.2** stETH totalShare changes downward only in case of slash ? 
 
 - stETH totalShare does not change downwards in case of slash. In case of slash the amount of stETH corresponding to share changes.
 
 
-3.3 In the normal course of the process totalShare should only increase ?
+**3.3** In the normal course of the process totalShare should only increase ?
 
 - Correct, while there is no way to take out ETH, totalShare should increase as the amount of tainted assets increases. Technically, you could burn stETH to reduce totalShare, but in practice this does not happen. Laido may resort to this mechanism to handle slashing + slashing insurance, or to deal with MEVs, but so far there has been no occasion to do so.
 
 
-3.4 When wrap followed by unwrap we end up with a smaller stETH value compared to the initial one, right?
+**3.4** When wrap followed by unwrap we end up with a smaller stETH value compared to the initial one, right?
 
 - A wrap followed by an unwrap may result in a lower stETH compared to the initial stETH if the amount of air locked in the protocol has decreased since the wrap (at this point this may be due to slashing or staking penalties).
-
-
 
 
 ## Contracts

@@ -1,4 +1,4 @@
-# stETH & wstETH Integration Guide
+# stETH & wstETH Integration Paper
 
 [![Supported by LEGO](https://img.shields.io/badge/Supported%20by-LEGO-%2300A3FF)](https://www.notion.so/LEGO-Lido-Ecosystem-Grants-Organisation-d7f0bf0182d44348b6173639d2e8363d)  
 

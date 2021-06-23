@@ -343,9 +343,9 @@ With the recent advent and hysteria of undercollateralized loans (credit delegat
  
 Proposals have been shared on the governance forums of certain lending protocols. Users have discussed the possibilities of adding stETH as collateral. You can read more information about it here:
 
-- Maker stETH onboarding proposal
-- Collateral onboarding call with Maker
-- Aave stETH onboarding proposal
+- [Maker stETH onboarding proposal](https://forum.makerdao.com/t/steth-mip6-collateral-onboarding/5762)
+- [Collateral onboarding call with Maker](https://forum.makerdao.com/t/collateral-onboarding-call-25-lido-wednesday-january-27-18-00-utc/6135/6)
+- [Aave stETH onboarding proposal](https://governance.aave.com/t/proposal-add-support-for-steth-lido/2123)
 
 Although stETH is a freely tradable asset it does have issues when being used as collateral. Most DEXs and AAVE do not support rebasing of assets locked into the protocol. So depositing stETH into AAVE will lead user to losing rewards for the time that it is locked. LIDO has already solved this with creating wrapped stETH (Wrapped stETH (wstETH) | Lido: Help). 
 

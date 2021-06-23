@@ -1946,6 +1946,7 @@ In the future, stETH may also expand to put/call options.
 
 # Bief FAQ:
 
+
 1. What purpose does wstETH serve? I assume mostly as a replacement for the stETH token in LPs that don't work correctly with elastic supply tokens, which is essentially stETH. are there other reasons for wrapping stETH in wstETH?
 
 - Right, wstETH can be used instead of stETH in integrations with protocols that do not support rebasable tokens. AMM, bridges between blockchains and money markets (marker, aave etc) are most important.

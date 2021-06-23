@@ -394,4 +394,6 @@ wstETH implements [EIP-2612 Permit](https://eips.ethereum.org/EIPS/eip-2612) sta
 |    🛑    | Function can modify state |
 |    💵    | Function is payable |
 
+#
+
 See resources and more info in License. 

@@ -347,30 +347,6 @@ transfer and get wstETH in return. The contract will send ETH to Lido submit
 method, staking it and wrapping the received stETH.
 
 
-## WSTETH ERC20 Token Smart Contract Technical Assessment
-
-- Compiler version: v0.6.12+commit.27d51765
-- Decimals: 18
-- Overflow checks: Yes, the contract uses the OpenZeppelin's `SafeMath` library for uint operations.
-- Mitigation against allowance race-condition: No.
-- Upgradeable contract patterns: No.
-- Access control or restriction lists: No.
-- Non-standard features or behaviors: Yes, the functions for wrapping/unwrapping stETH tokens to wstETH and back.
-
-## Formal Verification Considerations
-
-- Does transfer have simple semantics? Yes.
-
-- Does transferFrom have simple semantics? Yes.
-
-- Can balances be arbitrarily modified by some actor? No.
-
-- Are there any external calls? Yes: wstETH calls to stETH upon wrapping/unwrapping to/from stETH (`wrap` and `unwrap` functions) and from ETH (the `receive() payable` function). The standard ERC20 interface methods don't issue any external calls.
-
-## Testnet Information
-
-WstETH is deployed on Görli at https://goerli.etherscan.io/address/0x6320cd32aa674d2898a68ec82e869385fc5f7e2f and uses the Görli deployment of stETH at https://goerli.etherscan.io/address/0x1643E812aE58766192Cf7D2Cf9567dF2C37e9B7F.
-
 ## Contract Logic Summary
 
 - [wstETH](https://docs.lido.fi/contracts/wsteth) is a permissionless constant-balance wrapper token for the rebasing [stETH](https://docs.lido.fi/contracts/lido), the main Ethereum liquid staking token by Lido.
@@ -396,30 +372,6 @@ The token contract inherits from the OpenZeppelin's `ERC20Permit`.
 ## Other
 
 wstETH implements [EIP-2612 Permit](https://eips.ethereum.org/EIPS/eip-2612) standard for `secp256k1`-signed approvals.
-
-
-### Architecture Diagram
-
-![](https://i.imgur.com/Eo5cqTk.png)
-Created using [ConsenSys Diligence’s Surya](https://github.com/consensys/surya)
-
-#
-
-
-### Inheritance Diagram
-
-![](https://i.imgur.com/DcBXsxU.png)
-Created using [ConsenSys Diligence’s Surya](https://github.com/consensys/surya)
-
-
-### Sūrya’s Description Report
-
-#### Files Description Table
-
-
-|  File Name  |  SHA-1 Hash  |
-|-------------|--------------|
-| contracts/0.6.12/WstETH.sol | 923c4aa6c60bcca871d7ca75239b8188196e89b9 |
 
 
 #### Contracts Description Table

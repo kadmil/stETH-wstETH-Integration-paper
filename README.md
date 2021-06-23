@@ -663,3 +663,12 @@ Concerning stETH liquidity: [https://blog.lido.fi/concerning-steth-liquidity/](h
 Risks Calculation: [https://drive.google.com/file/d/1n6pdXKMxaRjxQfZi9WBJXnbD96SNYdxH/view](https://drive.google.com/file/d/1n6pdXKMxaRjxQfZi9WBJXnbD96SNYdxH/view)
 
 Volatility Calculations: [https://colab.research.google.com/drive/1qEsWlsAPKqZgJUhazISPB6Ytcd1MeFGV?usp=sharing](https://colab.research.google.com/drive/1qEsWlsAPKqZgJUhazISPB6Ytcd1MeFGV?usp=sharing)
+
+Pictures: [https://morioh.com/p/79d43d9d161a](https://morioh.com/p/79d43d9d161a)
+
+Lido Docs: [docs.lido.fi](docs.lido.fi)
+
+Oracle V2: [https://github.com/lidofinance/lido-improvement-proposals/blob/develop/LIPS/lip-2.md](https://github.com/lidofinance/lido-improvement-proposals/blob/develop/LIPS/lip-2.md)
+
+LEGO Program: [https://www.notion.so/stETH-wstETH-Integration-guide-outline-a9ed150deb3c4c38a9d78aec221d55b5](https://www.notion.so/stETH-wstETH-Integration-guide-outline-a9ed150deb3c4c38a9d78aec221d55b5)
+

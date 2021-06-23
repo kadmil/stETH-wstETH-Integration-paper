@@ -398,13 +398,12 @@ The token contract inherits from the OpenZeppelin's `ERC20Permit`.
 wstETH implements [EIP-2612 Permit](https://eips.ethereum.org/EIPS/eip-2612) standard for `secp256k1`-signed approvals.
 
 
-## Supporting materials
-
-
 ### Architecture Diagram
 
 ![](https://i.imgur.com/Eo5cqTk.png)
 Created using [ConsenSys Diligence’s Surya](https://github.com/consensys/surya)
+
+#
 
 
 ### Inheritance Diagram
@@ -637,7 +636,6 @@ In the future, stETH may also expand to put/call options.
 
 
 **Resources**
-
 #
 
 Onboarding: [https://www.notion.so/stETH-Collateral-Onboarding-Risk-Evaluation-1ea3a6fb4dbf4132b2c5347dbba0c9ec](https://www.notion.so/stETH-Collateral-Onboarding-Risk-Evaluation-1ea3a6fb4dbf4132b2c5347dbba0c9ec)
